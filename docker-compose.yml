@@ -1,0 +1,54 @@
+version: "3.7"
+
+services:
+    os01:
+        image: opensearchproject/opensearch:$OS_VERSION
+        ulimits:
+            nofile:
+                soft: 65535
+                hard: 65535
+            memlock:
+                soft: -1
+                hard: -1
+        container_name: $OS_NODE1
+        environment:
+            - node.name=$OS_NODE1
+            - bootstrap.memory_lock=true
+            - "OPENSEARCH_JAVA_OPTS=-Xms$OS_JAVA_MEM -Xmx$OS_JAVA_MEM"
+            - DISABLE_SECURITY_PLUGIN=true
+            - DISABLE_INSTALL_DEMO_CONFIG=true
+            - discovery.type=single-node
+        ports:
+            - "9200:9200"
+            - "9600:9600"
+        volumes:
+            - os01_data:/usr/share/opensearch/data
+
+    arkime:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        depends_on:
+            - $OS_NODE1
+        env_file:
+            - ./env/arkime-compose.env
+        environment:
+            - ARKIME_INTERFACE=ens33
+            - OS_HOST=localhost
+            - OS_PORT=9200
+        network_mode: "host"
+        cap_add:
+            - NET_ADMIN
+            - NET_RAW
+        volumes:
+            - arkime_config:/data/config
+            - arkime_logs:/data/logs
+            - type: bind
+              source: $PCAP_DIR
+              target: /data/pcap
+
+volumes:
+    arkime_config:
+    arkime_logs:
+
+    os01_data:

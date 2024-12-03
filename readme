@@ -1,0 +1,13 @@
+sudo apt-get install -y docker.io
+sudo systemctl enable --now docker
+docker --version
+sudo apt-get install -y docker-compose
+docker-compose --version
+
+sudo ip link set dev eth0 mtu 4500
+
+/usr/sbin/ip link set eth0 up || true
+/usr/sbin/ip link set eth0 promisc on || true
+/sbin/ethtool -G eth0 rx 4096 tx 4096 || true
+
+/sbin/ethtool -K eth0 rx off tx off sg off tso off ufo off gso off gro off lro off || true
