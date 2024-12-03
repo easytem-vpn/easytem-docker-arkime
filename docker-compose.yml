@@ -33,7 +33,7 @@ services:
         env_file:
             - ./env/arkime-compose.env
         environment:
-            - ARKIME_INTERFACE=ens33
+            - ARKIME_INTERFACE=tun0
             - OS_HOST=localhost
             - OS_PORT=9200
         network_mode: "host"
