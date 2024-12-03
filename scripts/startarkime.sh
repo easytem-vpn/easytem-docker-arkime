@@ -57,7 +57,7 @@ fi
 # check if the capture process should be started
 if [ "$CAPTURE" = "on" ]; then
     # ensure /data/pcap directory is writable for user 'nobody' (used by the capture process)
-    chmod 757 /data/pcap
+    chmod 777 /data/pcap
 
     echo "magicMode=basic" >> $ARKIMEDIR/etc/config.ini
     echo "snapLen=65536" >> $ARKIMEDIR/etc/config.ini
